@@ -13,13 +13,12 @@ namespace UserMaintenance
 {
     public partial class Form1 : Form
     {
-        BindingList<User> users = new BindingList<User>(); 
+        BindingList<User> users = new BindingList<User>();
         public Form1()
         {
             InitializeComponent();
 
-            labelLastName.Text = Resource1.LastName;
-            labelfirstName.Text = Resource1.FirstName;
+            labelLastName.Text = Resource1.FullName.Split(' ')[0];
             addButton.Text = Resource1.Add;
 
             listBox1.DataSource = users;
@@ -31,8 +30,7 @@ namespace UserMaintenance
         {
             var u = new User()
             {
-                LastName = lastNameTextBox.Text,
-                FirstName = firstNameTextBox.Text
+                FullName = lastNameTextBox.Text + ' ' + firstNameTextBox.Text
             };
             users.Add(u);
         }
