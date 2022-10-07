@@ -18,6 +18,9 @@ namespace ExcelGeneration
 
         List<Flat> flats;
 
+        object[,] values;
+        string[] headers;
+
         Excel.Application xlApp;
         Excel.Workbook xlWB;
         Excel.Worksheet xlSheet;
@@ -57,7 +60,7 @@ namespace ExcelGeneration
 
         private void CreateTable()
         {
-            string[] headers = new string[]
+            headers = new string[]
             {
                 "Kód",
                 "Eladó",
@@ -67,7 +70,7 @@ namespace ExcelGeneration
                 "Szobák száma",
                 "Alapterület (m2)",
                 "Ár (mFt)",
-                "Négyzetméter ár (Ft/m2)"
+                "Négyzetméter ár (mFt/m2)"
             };
 
             for (int i = 0; i < headers.Length; i++)
@@ -75,7 +78,7 @@ namespace ExcelGeneration
                 xlSheet.Cells[1, i + 1] = headers[i];
             }
 
-            object[,] values = new object[flats.Count, headers.Length];
+            values = new object[flats.Count, headers.Length];
 
             int counter = 0;
             foreach (Flat flat in flats)
@@ -95,6 +98,42 @@ namespace ExcelGeneration
 
             xlSheet.get_Range(GetCell(2, 1),
              GetCell(1 + values.GetLength(0), values.GetLength(1))).Value2 = values;
+
+            FormatWorkSheet();
+
+
+        }
+
+        private void FormatWorkSheet()
+        {
+            FormatHeaders();
+            FormatContent();
+        }
+
+        private void FormatContent()
+        {
+            Excel.Range firstCol = xlSheet.get_Range(GetCell(2,1),GetCell(1 + values.GetLength(0),1));
+            Excel.Range contentRange = xlSheet.get_Range(GetCell(2, 1),
+             GetCell(1 + values.GetLength(0), values.GetLength(1)));
+            Excel.Range lastCol = xlSheet.get_Range(GetCell(2, values.GetLength(1)), GetCell(1 + values.GetLength(0), values.GetLength(1)));
+
+            firstCol.Font.Bold = true;
+            firstCol.Interior.Color = Color.LightYellow;
+            lastCol.Interior.Color = Color.LightGreen;
+            lastCol.NumberFormat = "0.00";
+            contentRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+        }
+
+        private void FormatHeaders()
+        {
+            Excel.Range headerRange = xlSheet.get_Range(GetCell(1, 1), GetCell(1, headers.Length));
+            headerRange.Font.Bold = true;
+            headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            headerRange.EntireColumn.AutoFit();
+            headerRange.RowHeight = 40;
+            headerRange.Interior.Color = Color.LightBlue;
+            headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
         }
 
         private void LoadData()
