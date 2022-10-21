@@ -17,20 +17,52 @@ namespace SOAP_request
     public partial class Form1 : Form
     {
         BindingList<RateData> Rates = new BindingList<RateData>();
-        string XMLResult;
+        BindingList<string> Currencies = new BindingList<string>();
+        string XMLResultRates;
+        string XMLResultCurrencies;
         public Form1()
         {
             InitializeComponent();
+            GetMnbCurrencies();
             RefreshData();
-            
+        }
+
+        private void GetMnbCurrencies()
+        {
+            var mnbService = new MNBArfolyamServiceSoapClient();
+
+            var request = new GetCurrenciesRequestBody();
+
+            var response = mnbService.GetCurrencies(request);
+            var result = response.GetCurrenciesResult;
+
+            XMLResultCurrencies = result;
+            CreateXMLCurrencies(result);
+        }
+
+        private void CreateXMLCurrencies(string result)
+        {
+            var xml = new XmlDocument();
+            xml.LoadXml(result);
+
+            foreach (XmlElement element in xml.DocumentElement.ChildNodes[0])
+            {
+                string currency;
+                var childElement = element.ChildNodes[0];
+                if (childElement == null)
+                    continue;
+                currency = childElement.InnerText;
+                Currencies.Add(currency);
+            }
         }
 
         private void RefreshData()
         {
             Rates.Clear();
+            currencyBox.DataSource = Currencies;
             MnbSoapRequest();
             dataGridView1.DataSource = Rates;
-            CreateXML(XMLResult);
+            CreateXMLRates(XMLResultRates);
             CreateChart();
         }
 
@@ -53,7 +85,7 @@ namespace SOAP_request
             chartArea.AxisY.IsStartedFromZero = false;
         }
 
-        private void CreateXML(string result)
+        private void CreateXMLRates(string result)
         {
             var xml = new XmlDocument();
             xml.LoadXml(result);
@@ -66,6 +98,8 @@ namespace SOAP_request
                 rate.Date = DateTime.Parse(element.GetAttribute("date"));
 
                 var childElement = (XmlElement)element.ChildNodes[0];
+                if (childElement == null)
+                    continue;
                 rate.Currency = childElement.GetAttribute("curr");
 
                 var unit = decimal.Parse(childElement.GetAttribute("unit"));
@@ -89,7 +123,7 @@ namespace SOAP_request
             var response = mnbService.GetExchangeRates(request);
             var result = response.GetExchangeRatesResult;
 
-            XMLResult = result;
+            XMLResultRates = result;
         }
 
         private void startDatePicker_ValueChanged(object sender, EventArgs e)
