@@ -21,6 +21,13 @@ namespace SOAP_request
         public Form1()
         {
             InitializeComponent();
+            RefreshData();
+            
+        }
+
+        private void RefreshData()
+        {
+            Rates.Clear();
             MnbSoapRequest();
             dataGridView1.DataSource = Rates;
             CreateXML(XMLResult);
@@ -74,9 +81,9 @@ namespace SOAP_request
 
             var request = new GetExchangeRatesRequestBody()
             {
-                currencyNames = "EUR",
-                startDate = "2020-01-01",
-                endDate = "2020-06-30"
+                currencyNames = currencyBox.SelectedItem.ToString(),
+                startDate = startDatePicker.Value.ToString(),
+                endDate = endDatePicker.Value.ToString()
             };
 
             var response = mnbService.GetExchangeRates(request);
@@ -85,5 +92,19 @@ namespace SOAP_request
             XMLResult = result;
         }
 
+        private void startDatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void endDatePicker_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void currencyBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
     }
 }
