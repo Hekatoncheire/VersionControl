@@ -1,0 +1,11 @@
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\bin\Debug\FejlesztesiMintak.exe.config
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\bin\Debug\FejlesztesiMintak.exe
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\bin\Debug\FejlesztesiMintak.pdb
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\obj\Debug\FejlesztesiMintak.csproj.AssemblyReference.cache
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\obj\Debug\FejlesztesiMintak.Form1.resources
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\obj\Debug\FejlesztesiMintak.Properties.Resources.resources
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\obj\Debug\FejlesztesiMintak.csproj.GenerateResource.cache
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\obj\Debug\FejlesztesiMintak.csproj.CoreCompileInputs.cache
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\obj\Debug\FejlesztesiMintak.exe
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\obj\Debug\FejlesztesiMintak.pdb
+C:\Users\langa\OneDrive\Dokumentumok\egyetem\9. félév\IRF\VersionControl\FejlesztesiMintak\FejlesztesiMintak\bin\Debug\Images\car.png
