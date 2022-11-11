@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace VaR
         PortfolioEntities context = new PortfolioEntities();
         List<Tick> Ticks;
         List<PortfolioItem> Portfolio = new List<PortfolioItem>();
+        List<decimal> orderedProfit = new List<decimal>();
 
         public Form1()
         {
@@ -40,6 +42,7 @@ namespace VaR
                                       orderby x
                                       select x)
                                         .ToList();
+            orderedProfit = nyereségekRendezve;
             MessageBox.Show(nyereségekRendezve[nyereségekRendezve.Count() / 5].ToString());
         }
 
@@ -65,6 +68,24 @@ namespace VaR
                 value += (decimal)last.Price * item.Volume;
             }
             return value;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.InitialDirectory = Application.StartupPath;
+
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+            using (var streamWriter = new StreamWriter(saveFileDialog.FileName, false, Encoding.Default))
+            {
+                streamWriter.WriteLine("Időszak;Nyereség");
+
+                for (int i = 0; i < orderedProfit.Count(); i++)
+                {
+                    streamWriter.WriteLine(string.Format("{0};{1}", i, orderedProfit[i]));
+                }
+            }
+        
         }
     }
 }
