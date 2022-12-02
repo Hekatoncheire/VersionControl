@@ -18,20 +18,22 @@ namespace MicroSimulations
         List<BirthProbability> BirthProbabilities = new List<BirthProbability>();
         List<DeathProbability> DeathProbabilities = new List<DeathProbability>();
 
+        List<int> yearlyMalePopulation = new List<int>();
+        List<int> yearlyFemalePopulation = new List<int>();
+
         Random rng = new Random(666);
         public Form1()
         {
             InitializeComponent();
-            GetPopulation(@"C:\Temp\nép-teszt.csv");
-            GetBirthProbabilities(@"C:\Temp\születés.csv");
-            GetDeathProbabilities(@"C:\Temp\halál.csv");
-
-            Simulation();
         }
 
         private void Simulation()
         {
-            for (int year = 2005; year <= 2024; year++)
+            Population = GetPopulation(fileNameTextBox.Text);
+            BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
+            DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
+
+            for (int year = 2005; year <= closingYearNumericUpDown.Value; year++)
             {
                 for (int i = 0; i < Population.Count; i++)
                 {
@@ -44,8 +46,18 @@ namespace MicroSimulations
                 int nbrOfFemales = (from x in Population
                                     where x.Gender == Gender.Female && x.IsAlive
                                     select x).Count();
-                Console.WriteLine(
-                    string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+
+                yearlyMalePopulation.Add(nbrOfMales);
+                yearlyMalePopulation.Add(nbrOfFemales);
+            }
+
+        }
+
+        private void DisplayResults()
+        {
+            for (int year = 2005; year <= closingYearNumericUpDown.Value; year++)
+            {
+                resultsBox.AppendText("Szimulációs év: " + year + "\n" + "\t" + "Fiúk: " + "\n" + "\t" + "Lányok: " + "\n" + "\n");
             }
         }
 
@@ -141,6 +153,22 @@ namespace MicroSimulations
                     Population.Add(newBornBaby);
                 }
             }
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            Simulation();
+            DisplayResults();
+        }
+
+        private void browseButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = "C:/Temp";
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            fileNameTextBox.Text = openFileDialog.FileName;
         }
     }
 }
