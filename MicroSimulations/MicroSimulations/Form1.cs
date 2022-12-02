@@ -20,22 +20,54 @@ namespace MicroSimulations
         public Form1()
         {
             InitializeComponent();
-            Read_csv1();
-            Read_csv2();
-            Read_csv3();
+            GetPopulation(@"C:\Temp\nép-teszt.csv");
+            GetBirthProbabilities(@"C:\Temp\születés.csv");
+            GetDeathProbabilities(@"C:\Temp\halál.csv");
         }
 
-        private List<Person> Read_csv3()
+        private List<DeathProbability> GetDeathProbabilities(string csvpath)
         {
-            
+            List<DeathProbability> deathProbabilities = new List<DeathProbability>();
+
+            using (StreamReader sr = new StreamReader(csvpath, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine().Split(';');
+                    deathProbabilities.Add(new DeathProbability()
+                    {
+                        Gender = (Gender)Enum.Parse(typeof(Gender), line[0]),
+                        Age = int.Parse(line[1]),
+                        Probability = double.Parse(line[2])
+                    });
+                }
+            }
+
+            return deathProbabilities;
         }
 
-        private List<Person> Read_csv2()
+        private List<BirthProbability> GetBirthProbabilities(string csvpath)
         {
-            
+            List<BirthProbability> birthProbabilities = new List<BirthProbability>();
+
+            using (StreamReader sr = new StreamReader(csvpath, Encoding.Default))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine().Split(';');
+                    birthProbabilities.Add(new BirthProbability()
+                    {
+                        Age = int.Parse(line[0]),
+                        NbrOfChildren = int.Parse(line[1]),
+                        Probability = double.Parse(line[2]),
+                    });
+                }
+            }
+
+            return birthProbabilities;
         }
 
-        private List<Person> Read_csv1(string csvpath)
+        private List<Person> GetPopulation(string csvpath)
         {
             List<Person> population = new List<Person>();
 
