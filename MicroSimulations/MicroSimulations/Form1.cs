@@ -17,12 +17,48 @@ namespace MicroSimulations
         List<Person> Population = new List<Person>();
         List<BirthProbability> BirthProbabilities = new List<BirthProbability>();
         List<DeathProbability> DeathProbabilities = new List<DeathProbability>();
+
+        List<int> yearlyMalePopulation = new List<int>();
+        List<int> yearlyFemalePopulation = new List<int>();
+
+        Random rng = new Random(666);
         public Form1()
         {
             InitializeComponent();
-            GetPopulation(@"C:\Temp\nép-teszt.csv");
-            GetBirthProbabilities(@"C:\Temp\születés.csv");
-            GetDeathProbabilities(@"C:\Temp\halál.csv");
+        }
+
+        private void Simulation()
+        {
+            Population = GetPopulation(fileNameTextBox.Text);
+            BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
+            DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
+
+            for (int year = 2005; year <= closingYearNumericUpDown.Value; year++)
+            {
+                for (int i = 0; i < Population.Count; i++)
+                {
+                    SimStep(year, Population[i]);
+                }
+
+                int nbrOfMales = (from x in Population
+                                  where x.Gender == Gender.Male && x.IsAlive
+                                  select x).Count();
+                int nbrOfFemales = (from x in Population
+                                    where x.Gender == Gender.Female && x.IsAlive
+                                    select x).Count();
+
+                yearlyMalePopulation.Add(nbrOfMales);
+                yearlyMalePopulation.Add(nbrOfFemales);
+            }
+
+        }
+
+        private void DisplayResults()
+        {
+            for (int year = 2005; year <= closingYearNumericUpDown.Value; year++)
+            {
+                resultsBox.AppendText("Szimulációs év: " + year + "\n" + "\t" + "Fiúk: " + "\n" + "\t" + "Lányok: " + "\n" + "\n");
+            }
         }
 
         private List<DeathProbability> GetDeathProbabilities(string csvpath)
@@ -86,6 +122,53 @@ namespace MicroSimulations
             }
 
             return population;
+        }
+
+        private void SimStep(int year, Person person)
+        {
+            if (!person.IsAlive) return;
+
+            byte age = (byte)(year - person.BirthYear);
+
+            double pDeath = (from x in DeathProbabilities
+                             where x.Gender == person.Gender && x.Age == age
+                             select x.Probability).FirstOrDefault();
+
+            if (rng.NextDouble() <= pDeath)
+                person.IsAlive = false;
+
+            if (person.IsAlive && person.Gender == Gender.Female)
+            {
+
+                double pBirth = (from x in BirthProbabilities
+                                 where x.Age == age
+                                 select x.Probability).FirstOrDefault();
+
+                if (rng.NextDouble() <= pBirth)
+                {
+                    Person newBornBaby = new Person();
+                    newBornBaby.BirthYear = year;
+                    newBornBaby.NbrOfChildren = 0;
+                    newBornBaby.Gender = (Gender)(rng.Next(1, 3));
+                    Population.Add(newBornBaby);
+                }
+            }
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            Simulation();
+            DisplayResults();
+        }
+
+        private void browseButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = "C:/Temp";
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+            fileNameTextBox.Text = openFileDialog.FileName;
         }
     }
 }
