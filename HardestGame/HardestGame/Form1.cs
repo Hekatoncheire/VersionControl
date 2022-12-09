@@ -56,6 +56,7 @@ namespace HardestGame
             if (winners.Count() > 0)
             {
                 winnerBrain = winners.FirstOrDefault().Brain.Clone();
+                button1.Visible = true;
                 gc.GameOver -= Gc_GameOver;
                 return;
             }
@@ -75,6 +76,15 @@ namespace HardestGame
                     gc.AddPlayer(b.Mutate());
             }
             gc.Start();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            gc.ResetCurrentLevel();
+            gc.AddPlayer(winnerBrain.Clone());
+            gc.AddPlayer();
+            ga.Focus();
+            gc.Start(true);
         }
     }
 }
